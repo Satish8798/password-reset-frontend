@@ -9,9 +9,12 @@ const PasswordReset = () => {
   });
   const [passwordChangeStatus, setPasswordChangeStatus] = useState(false);
   const [alert , setAlert] = useState(false);
+  const [matching, setMatching] = useState(true);
+  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log("arrived")
     if (!accountData.confirmPassword) {
       try {
         let response = await axios.post(
@@ -31,6 +34,27 @@ const PasswordReset = () => {
                 setAlert(false);
                 
             },3000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }else{
+      setMatching(true);
+      setSuccess(false);
+      try {
+        let response = await axios.post(
+          "http://localhost:8000/reset-account",
+          {
+            ...accountData,
+          }
+        );
+        console.log(response)
+        if(response.data.msg){
+          setMatching(true);
+          setSuccess(true);
+
+        }else{
+          setMatching(false);
         }
       } catch (error) {
         console.log(error);
@@ -105,6 +129,24 @@ const PasswordReset = () => {
                 </div>
 
             )
+        }
+        {
+            success &&
+            (  
+                <div class="alert alert-success w-75 mt-3 ms-1" role="alert">
+                    password Changed successfully
+                </div>
+
+            )
+        }
+        {
+          !matching &&
+          (  
+              <div class="alert alert-success w-75 mt-3 ms-1" role="alert">
+                  passwords not matching
+              </div>
+
+          ) 
         }
       </form>
     </div>
