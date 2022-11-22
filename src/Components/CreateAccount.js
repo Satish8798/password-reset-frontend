@@ -12,7 +12,7 @@ const CreateAccount = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      let response = await axios.post("http://localhost:8000/create-account", {
+      let response = await axios.post("https://password-reset-zen.herokuapp.com/create-account", {
         ...accountData
       });
       setCreateStatus(response.data.msg);

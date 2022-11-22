@@ -18,7 +18,7 @@ const PasswordReset = () => {
     if (!accountData.confirmPassword) {
       try {
         let response = await axios.post(
-          "http://localhost:8000/search-account",
+          "https://password-reset-zen.herokuapp.com/search-account",
           {
             ...accountData,
           }
@@ -43,7 +43,7 @@ const PasswordReset = () => {
       setSuccess(false);
       try {
         let response = await axios.post(
-          "http://localhost:8000/reset-account",
+          "https://password-reset-zen.herokuapp.com/reset-account",
           {
             ...accountData,
           }
