@@ -1,16 +1,22 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PasswordReset = () => {
+  const navigate = useNavigate();
   const [accountData, setData] = useState({
     email: "",
     newPassword: "",
     confirmPassword: null,
   });
+  const [searchStatus, setSearchStatus]= useState(false);
   const [passwordChangeStatus, setPasswordChangeStatus] = useState(false);
   const [alert , setAlert] = useState(false);
   const [matching, setMatching] = useState(true);
   const [success, setSuccess] = useState(false);
+  const [otpstatus, setOtpstatus] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpTrue, setOtpTrue] = useState(true);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -18,14 +24,15 @@ const PasswordReset = () => {
     if (!accountData.confirmPassword) {
       try {
         let response = await axios.post(
-          "https://password-reset-zen.herokuapp.com/search-account",
+          "http://password-reset-zen.herokuapp.com/search-account",
           {
             ...accountData,
           }
         );
         console.log(response)
         if(response.data.msg){
-            setPasswordChangeStatus(true);
+          setOtpstatus(true);
+          setSearchStatus(true);
         }else{
             setAlert(true);
             setTimeout(()=>{
@@ -52,7 +59,9 @@ const PasswordReset = () => {
         if(response.data.msg){
           setMatching(true);
           setSuccess(true);
-
+          setTimeout(()=>{
+            navigate('/')
+          },3000)
         }else{
           setMatching(false);
         }
@@ -62,10 +71,33 @@ const PasswordReset = () => {
     }
   }
 
+  async function checkOtp(){
+    try {
+      let response = await  axios.post(
+        "http://password-reset-zen.herokuapp.com/check-otp",
+        {
+          email: accountData.email,
+          otp: otp
+        }
+      );
+
+      if(response.data.msg){
+        setOtpTrue(true);
+        setOtpstatus(false);
+        setPasswordChangeStatus(true)
+      }else{
+        setOtpTrue(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
   return (
-    <div>
+    <div  className= "col-xs-12 col-md-5 col-lg-6">
       <form
-        className="mt-4 p-2 w-25 ms-5 w-md-100"
+        className="mt-4 p-2 ms-5 me-5"
         onSubmit={(e) => {
           handleSubmit(e);
         }}
@@ -83,6 +115,31 @@ const PasswordReset = () => {
           />
           <label for="floatingInput">Email</label>
         </div>
+        {
+          otpstatus && 
+          <div>
+            <div className="form-floating mb-3 ">
+          <input
+            type="text"
+            onChange={(e) => {
+              setOtp(e.target.value);
+            }}
+            className="form-control"
+            id="floatingInput"
+            value={otp}
+            required
+          />
+          <label for="floatingInput">OTP</label>
+        </div>
+        <button type="button" className="btn btn-success mt-3" onClick={
+          ()=>{
+            checkOtp();
+          }
+        }>
+        send
+      </button>
+          </div>
+        }
         {passwordChangeStatus && (
           <div className="password-change">
             <div className="form-floating  mb-3">
@@ -116,7 +173,7 @@ const PasswordReset = () => {
             </button>
           </div>
         )}
-        {!passwordChangeStatus && (
+        {!searchStatus && (
           <button type="submit" className="btn btn-success mt-3">
             Search
           </button>
@@ -144,6 +201,15 @@ const PasswordReset = () => {
           (  
               <div class="alert alert-success w-75 mt-3 ms-1" role="alert">
                   passwords not matching
+              </div>
+
+          ) 
+        }
+        {
+          !otpTrue &&
+          (  
+              <div class="alert alert-success w-75 mt-3 ms-1" role="alert">
+                  Invalid Otp
               </div>
 
           ) 

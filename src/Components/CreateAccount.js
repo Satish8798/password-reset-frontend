@@ -29,9 +29,9 @@ const CreateAccount = () => {
   }
 
   return (
-    <div>
+    <div className= "col-xs-12 col-md-5 col-lg-6">
       <form
-        className="mt-4 p-2 w-25 ms-5 w-md-100"
+        className="mt-4 p-2 ms-5 me-5"
         onSubmit={(e) => {
           handleSubmit(e);
         }}

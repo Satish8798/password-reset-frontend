@@ -12,10 +12,10 @@ function Navbar(){
                 <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">
                     <li className="nav-item">
-                    <Link to="create-account" className="nav-link active text-success">CREATE</Link>
+                    <Link to="create-account" className="nav-link active text-success"><h5>CREATE</h5></Link>
                     </li>
                     <li className="nav-item">
-                    <Link to="reset-password"  className="nav-link text-danger">Reset Password</Link>
+                    <Link to="reset-password"  className="nav-link text-danger"><h5>Reset Password</h5></Link>
                     </li>
                 </ul>
                 </div>
