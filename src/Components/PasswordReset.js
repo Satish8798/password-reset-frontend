@@ -20,11 +20,10 @@ const PasswordReset = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("arrived")
     if (!accountData.confirmPassword) {
       try {
         let response = await axios.post(
-          "http://password-reset-zen.herokuapp.com/search-account",
+          "https://password-reset-zen.herokuapp.com/search-account",
           {
             ...accountData,
           }
@@ -74,7 +73,7 @@ const PasswordReset = () => {
   async function checkOtp(){
     try {
       let response = await  axios.post(
-        "http://password-reset-zen.herokuapp.com/check-otp",
+        "https://password-reset-zen.herokuapp.com/check-otp",
         {
           email: accountData.email,
           otp: otp
